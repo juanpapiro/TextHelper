@@ -10,10 +10,11 @@ import br.com.texthelper.annotations.MakeText;
 public class TextHelperUtils {
 	
 	public static boolean isNull(String value) {
-		return value.trim() == null || value.trim().isEmpty();
+		return value == null || value.trim().isEmpty();
 	}
 	
 	public static String removeNonNumeric(String value) {
+		value = value != null ? value : "";
 		return value.replaceAll("[^ 0-9]", "");
 	}
 	

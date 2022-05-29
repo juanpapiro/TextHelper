@@ -4,11 +4,10 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import br.com.texthelper.annotations.MakeText;
 
@@ -27,7 +26,7 @@ public class TextHelperFromObject {
 				PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), obj.getClass());
 				Method getter = propertyDescriptor.getReadMethod();
 				Object objValue = getter.invoke(obj);
-				Types type = Types.valueOf(propertyDescriptor.getPropertyType().getSimpleName().toUpperCase());
+				Types type = Types.getType(propertyDescriptor);
 				builder.append(formatString(objValue, makeText, type));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -39,18 +38,18 @@ public class TextHelperFromObject {
 	
 	
 	public static String formatString(Object value, MakeText makeText, Types type) {
-		String valueFormat = "";
-		int lengthTrelling = makeText.length() - valueFormat.length();
-		String valueFormatTrelling = makeText.trelling().repeat(lengthTrelling);
+		StringBuilder sb = new StringBuilder("");
+		int lengthTrelling;
 		try {
-			valueFormat = type.parse(value, makeText);
+			sb.append(type.parse(value, makeText));
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}	
+		lengthTrelling = makeText.length() - sb.length();
 		if(makeText.align().equals(LEFT)) {
-			return valueFormat.concat(valueFormatTrelling);			
+			return sb.append(makeText.trelling().repeat(lengthTrelling)).toString();			
 		} else {
-			return valueFormatTrelling.concat(valueFormat);
+			return sb.insert(0, makeText.trelling().repeat(lengthTrelling)).toString();
 		}
 	}
 	
@@ -69,14 +68,23 @@ public class TextHelperFromObject {
 			}
 		},
 		
+		DOUBLE {
+			public String parse(Object value, MakeText makeText) {
+				Double doubleVaue = (double) value;
+				return bigDecimalToText(BigDecimal.valueOf(doubleVaue), makeText);
+			}
+		},
+		
+		FLOAT {
+			public String parse(Object value, MakeText makeText) {
+				float floatValue = (float) value;
+				return bigDecimalToText(BigDecimal.valueOf(floatValue), makeText);
+			}
+		},
+		
 		BIGDECIMAL {
 			public String parse(Object value, MakeText makeText) {
-				BigDecimal bg = (BigDecimal) value;
-				if (!TextHelperUtils.isNull(makeText.pattern())) {
-					return decimalFormat(bg.toString(), makeText.pattern());
-				} else {
-					return TextHelperUtils.removeNonNumeric(bg.toString());
-				}
+				return bigDecimalToText(value, makeText);
 			}
 		},
 		
@@ -99,27 +107,42 @@ public class TextHelperFromObject {
 			}			
 		};
 		
-		private static final EnumSet<Types> enumSet = EnumSet.allOf(Types.class);
-		
-		public static Types getParser(String typeParam) {
-			if(typeParam == null) {
-				return DEFAULT;
-			}
-			List<Types> types = enumSet.stream()
-					.filter(type -> type.name().equals(typeParam.toUpperCase()))
-					.collect(Collectors.toList());
-			return types.isEmpty() ? DEFAULT : types.get(0);
-		}
+//		private static final EnumSet<Types> enumSet = EnumSet.allOf(Types.class);
 				
 		public abstract String parse(Object value, MakeText makeText);
 		
+		public static Types getType(PropertyDescriptor propertyDescriptor) {
+			Types type = Types.DEFAULT;
+			String typeSimpleName = "";
+			try {
+				typeSimpleName = propertyDescriptor.getPropertyType().getSimpleName().toUpperCase();
+				type = Types.valueOf(typeSimpleName);
+			} catch (Exception e) {
+				System.out.println(String.format("Tipo %s inexistente em Types", typeSimpleName));
+			}
+			return type;
+		}
+		
+
 	}
 	
-	private static String decimalFormat(String value, String pattern) {		
-		if(pattern.contains(".")) {
+	
+	
+	private static String bigDecimalToText(Object value, MakeText makeText) {
+		BigDecimal bg = (BigDecimal) value;
+		bg = bg.setScale(makeText.decimalPrecision(), RoundingMode.HALF_EVEN);
+		if (!TextHelperUtils.isNull(makeText.decimalSeparator())) {
+			return decimalSeparatorFormat(bg.toString(), makeText);
+		} else {
+			return TextHelperUtils.removeNonNumeric(bg.toString());
+		}
+	}
+	
+	private static String decimalSeparatorFormat(String value, MakeText makeText) {		
+		if(makeText.decimalSeparator().contains(".")) {
 			return value;
 		}
-		if(pattern.contains(",")) {
+		if(makeText.decimalSeparator().contains(",")) {
 			return value.replace(".", ",");
 		}		
 		return value;

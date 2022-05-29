@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>br.com.texthelper</groupId>
   <artifactId>texthelper</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>texthelper</name>
   <description>Conversor de mensagens posicionais para objetos e objetos para mensagens posicionais</description>
   
-  <parent>
+  	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.6.3</version>

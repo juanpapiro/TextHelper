@@ -14,6 +14,9 @@ public @interface MakeText {
 	String align() default "L";
 	String trelling() default " ";
 	String pattern() default "";
+	String decimalSeparator() default "";
+	int decimalPrecision() default 2;
+	int decimalMovePoint() default 0;
 	
 	
 }

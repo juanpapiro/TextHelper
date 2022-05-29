@@ -4,11 +4,10 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import br.com.texthelper.annotations.MakeText;
 
@@ -25,7 +24,7 @@ public class TextHelperFromText {
 			try {
 				PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), obj.getClass());
 				Method setter = propertyDescriptor.getWriteMethod();
-				Object objValue = Types.valueOf(propertyDescriptor.getPropertyType().getSimpleName().toUpperCase())
+				Object objValue = Types.getType(propertyDescriptor)
 						.parse(builder.substring(0, makeText.length()).toString(), makeText);
 				setter.invoke(obj, objValue);
 				builder.delete(0, makeText.length());
@@ -48,14 +47,25 @@ public class TextHelperFromText {
 		
 		INTEGER {
 			public Object parse(String value, MakeText makeText) {
-				return Integer.valueOf(TextHelperUtils.removeNonNumeric(value.trim()));
+				return Integer.valueOf(TextHelperUtils.removeNonNumeric(value));
+			}
+		},
+		
+		FLOAT {
+			public Object parse(String value, MakeText makeText) {
+				return toBigDecimal(value, makeText).floatValue();
+			}
+		},
+		
+		DOUBLE {
+			public Object parse(String value, MakeText makeText) {
+				return toBigDecimal(value, makeText).doubleValue();
 			}
 		},
 		
 		BIGDECIMAL {
 			public Object parse(String value, MakeText makeText) {
-				return TextHelperUtils.isNull(value) ? null : 
-					new BigDecimal(TextHelperUtils.removeNonNumeric(value.trim())).movePointLeft(2).setScale(2);
+				return toBigDecimal(value, makeText);
 			}
 		},
 		
@@ -77,21 +87,31 @@ public class TextHelperFromText {
 				return null;
 			}			
 		};
-		
-		private static final EnumSet<Types> enumSet = EnumSet.allOf(Types.class);
-		
-		public static Types getParser(String typeParam) {
-			if(typeParam == null) {
-				return DEFAULT;
-			}
-			List<Types> types = enumSet.stream()
-					.filter(type -> type.name().equals(typeParam.toUpperCase()))
-					.collect(Collectors.toList());
-			return types.isEmpty() ? DEFAULT : types.get(0);
-		}
 				
 		public abstract Object parse(String value, MakeText makeText);
 		
+		public static Types getType(PropertyDescriptor propertyDescriptor) {
+			Types type = Types.DEFAULT;
+			String typeSimpleName = "";
+			try {
+				typeSimpleName = propertyDescriptor.getPropertyType().getSimpleName().toUpperCase();
+				type = Types.valueOf(typeSimpleName);
+			} catch (Exception e) {
+				System.out.println(String.format("Tipo %s inexistente em Types", typeSimpleName));
+			}
+			return type;
+		}
+		
 	}
+	
+	
+	private static BigDecimal toBigDecimal(String value, MakeText makeText) {
+		value = TextHelperUtils.removeNonNumeric(value);
+		return TextHelperUtils.isNull(value) ? null : 
+			new BigDecimal(value)
+				.movePointLeft(makeText.decimalMovePoint())
+				.setScale(makeText.decimalPrecision(), RoundingMode.HALF_EVEN);
+	}
+	
 	
 }

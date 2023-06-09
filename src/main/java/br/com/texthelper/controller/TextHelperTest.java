@@ -9,9 +9,10 @@ import br.com.texthelper.utils.TextHelperFromText;
 
 public class TextHelperTest {
 	
+	
 	public static void main(String[] args) {
-		fromTextTest();
-		fromObjectTest();
+//		fromTextTest();
+//		fromObjectTest();
 	}
 
 	
@@ -23,7 +24,8 @@ public class TextHelperTest {
 	
 	public static Object fromTextTest() {
 		Request request = new Request();
-		request = (Request) TextHelperFromText.toObject(request, buildText());
+		TextHelperFromText parser = new TextHelperFromText();
+		request = (Request) parser.toObject(buildText(), request);
 		System.out.println(request.toJson());
 		return request;
 	}

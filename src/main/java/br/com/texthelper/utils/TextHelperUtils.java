@@ -9,6 +9,7 @@ import br.com.texthelper.annotations.MakeText;
 
 public class TextHelperUtils {
 	
+	
 	public static boolean isNull(String value) {
 		return value == null || value.trim().isEmpty();
 	}
@@ -25,5 +26,5 @@ public class TextHelperUtils {
 					.compareTo(Integer.valueOf(field2.getAnnotation(MakeText.class).order())))
 					.collect(Collectors.toList());
 	}
-
+	
 }

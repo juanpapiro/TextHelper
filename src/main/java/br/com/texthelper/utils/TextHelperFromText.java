@@ -10,11 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import br.com.texthelper.annotations.MakeText;
+import br.com.texthelper.service.ToObject;
 
-public class TextHelperFromText {
+public class TextHelperFromText implements ToObject {
 	
-	
-	public static Object toObject(Object obj, String message) {
+	@Override
+	public Object toObject(String message, Object obj) {
 				
 		StringBuilder builder = new StringBuilder(message);			
 		List<Field> fields = TextHelperUtils.builderOrderFields(obj);
@@ -42,6 +43,12 @@ public class TextHelperFromText {
 		STRING {
 			public Object parse(String value, MakeText makeText) {
 				return String.valueOf(value.trim());
+			}
+		},
+		
+		LONG {
+			public Object parse(String value, MakeText makeText) {
+				return Long.valueOf(TextHelperUtils.removeNonNumeric(value));
 			}
 		},
 		

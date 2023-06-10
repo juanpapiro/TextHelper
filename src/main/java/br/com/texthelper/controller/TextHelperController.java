@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -77,8 +78,9 @@ public class TextHelperController {
 			urls.forEach(c -> TextHelperLog.info("class -> " + c.getPath()));
 			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
 
-			File file = new File("/app/target/texthelper-0.0.2-SNAPSHOT.jar!/BOOT-INF/classes!/".concat(".").concat("StringParser"));
-			TextHelperLog.info(file.getPath());
+			File file = new File("/app/target/texthelper-0.0.2-SNAPSHOT.jar!/BOOT-INF/classes!/".concat(pathResurce).concat("/").concat("StringParser"));
+			String[] files = file.list();
+			Stream.of(files).forEach(f -> TextHelperLog.info("class -> " + f));
 			
 			return listClass.stream().map(Class::getName).collect(Collectors.toList());			
 		} catch(Exception e) {

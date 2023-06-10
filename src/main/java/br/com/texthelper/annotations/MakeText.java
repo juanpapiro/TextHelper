@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface MakeText {
 
 	int length();
-	int order();
+	int order() default 0;
 	String align() default "L";
 	String trelling() default " ";
 	String pattern() default "";

@@ -9,6 +9,9 @@ import br.com.texthelper.annotations.MakeText;
 
 public class TextHelperUtils {
 	
+	private TextHelperUtils() {
+		throw new IllegalStateException("Utility class");
+	}
 	
 	public static boolean isNull(String value) {
 		return value == null || value.trim().isEmpty();
@@ -22,9 +25,10 @@ public class TextHelperUtils {
 	public static List<Field> builderOrderFields(Object obj) {
 		List<Field> fields = Arrays.asList(obj.getClass().getDeclaredFields());
 		return fields.stream()
-					.sorted((field1, field2) -> Integer.valueOf(field1.getAnnotation(MakeText.class).order())
-					.compareTo(Integer.valueOf(field2.getAnnotation(MakeText.class).order())))
-					.collect(Collectors.toList());
+				.sorted((field1, field2) -> Integer.valueOf(field1.getAnnotation(MakeText.class).order())
+						.compareTo(Integer.valueOf(field2.getAnnotation(MakeText.class).order())))
+				.collect(Collectors.toList());			
+		
 	}
 	
 }

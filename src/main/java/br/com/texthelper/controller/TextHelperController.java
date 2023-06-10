@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
 import br.com.texthelper.annotations.MakeText;
 import br.com.texthelper.models.RequestSimple;
 import br.com.texthelper.parsers.TypeParser;
@@ -51,17 +53,20 @@ public class TextHelperController {
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
 
 			Class<?> clazz = Class.forName(TypeParser.class.getPackageName().concat(".").concat("BigDecimalParser"));
-			String path = clazz.getClassLoader().getResource(TypeParser.class.getName()).getPath();
-			TextHelperLog.info("Path classes: " + path);
+			Object obj = clazz.getConstructor().newInstance();
+
+			Gson g = new Gson();
+			
+			TextHelperLog.info(g.toJson(obj));
 			
 			TextHelperLog.info("One CLass Locate -> " + clazz.getName());
 
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+//			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-			InputStream is = classLoader.getResourceAsStream(pathResurce);
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			List<String> locateClasses = br.lines().collect(Collectors.toList());
-			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
+//			InputStream is = classLoader.getResourceAsStream(pathResurce);
+//			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+//			List<String> locateClasses = br.lines().collect(Collectors.toList());
+//			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			
 			Reflections reflections = new Reflections(
 					"br.com.texthelper",

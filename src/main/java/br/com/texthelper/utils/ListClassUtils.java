@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import br.com.texthelper.parsers.TypeParser;
+
 public class ListClassUtils {
 	
 	private ListClassUtils() {
@@ -50,8 +52,9 @@ public class ListClassUtils {
 	 */
 	private static List<String> getFilesByResource(String pathResurce) {
 		try {
-			TextHelperLog.info("Iniciando nusca de classes: " + pathResurce);
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
+//			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			ClassLoader classLoader = TypeParser.class.getClassLoader();
 			InputStream is = classLoader.getResourceAsStream(pathResurce);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());

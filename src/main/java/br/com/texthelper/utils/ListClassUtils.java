@@ -50,11 +50,12 @@ public class ListClassUtils {
 	 */
 	private static List<String> getFilesByResource(String pathResurce) {
 		try {
+			TextHelperLog.info("Iniciando nusca de classes: " + pathResurce);
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			InputStream is = classLoader.getResourceAsStream(pathResurce);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
-			locateClasses.forEach(TextHelperLog::info);
+			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			return locateClasses;			
 		} catch(Exception e) {
 			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);

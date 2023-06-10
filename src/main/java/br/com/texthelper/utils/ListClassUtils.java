@@ -72,8 +72,11 @@ public class ListClassUtils {
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			
-			Reflections reflections = new Reflections(pathResurce.replaceAll("/", "."),ClasspathHelper.forClassLoader());
-			Set<Class<?>> listClass = reflections.getSubTypesOf(Object.class);
+			Reflections reflections = new Reflections(
+					"br.com.texthelper",
+					new SubTypesScanner(false),
+					ClasspathHelper.forClassLoader());
+			Set<Class<? extends TypeParser>> listClass = reflections.getSubTypesOf(TypeParser.class);
 			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
 			
 			return locateClasses;			

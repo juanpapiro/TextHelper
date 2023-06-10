@@ -60,9 +60,9 @@ public class TextHelperController {
 			
 
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			TextHelperLog.info(classLoader.getResource(pathResurce.concat(pathResurce).concat("/")).getPath());
+			TextHelperLog.info(classLoader.getResource(pathResurce.concat("/")).getPath());
 			
-			InputStream is = classLoader.getResourceAsStream(pathResurce.concat(pathResurce).concat("/"));
+			InputStream is = classLoader.getResourceAsStream(pathResurce.concat("/"));
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));

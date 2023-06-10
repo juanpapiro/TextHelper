@@ -1,6 +1,7 @@
 package br.com.texthelper.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -40,6 +41,10 @@ public class TextHelperController {
 	public List<String> listClass() {
 		String pathResurce = TypeParser.class.getPackageName().replaceAll("[.]","/");
 		try {
+			
+			File file = new File(this.getClass().getResource(System.getProperty("user.dir")).getPath());
+			
+			TextHelperLog.info("File: " + file);
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
 
 			Class<?> clazz = Class.forName(TypeParser.class.getPackageName().concat(".").concat("BigDecimalParser"));

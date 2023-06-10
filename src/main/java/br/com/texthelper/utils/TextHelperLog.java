@@ -15,6 +15,10 @@ public class TextHelperLog {
 		log.info(message);
 	}
 	
+	public static void info(String message, Object obj) {
+		log.info(message, obj);
+	}
+	
 	public static void error(String message) {
 		log.error(message);
 	}

@@ -4,10 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.apache.el.util.ReflectionUtil;
 
 import br.com.texthelper.parsers.TypeParser;
 
@@ -54,6 +58,10 @@ public class ListClassUtils {
 	private static List<String> getFilesByResource(String pathResurce) {
 		try {
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
+
+			Class<?> clazz = Class.forName(TypeParser.class.getPackageName().concat(".").concat("BigDecimalParser"));
+			TextHelperLog.info("One CLass Locate -> " + clazz.getName());
+			
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			InputStream is = classLoader.getResourceAsStream(pathResurce);
 			File file = new File(classLoader.getResource(pathResurce).getPath());

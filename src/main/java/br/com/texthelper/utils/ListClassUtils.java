@@ -17,6 +17,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 
+import br.com.texthelper.annotations.MakeText;
 import br.com.texthelper.parsers.TypeParser;
 
 public class ListClassUtils {
@@ -76,7 +77,7 @@ public class ListClassUtils {
 					"br.com.texthelper",
 					new SubTypesScanner(false),
 					ClasspathHelper.forClassLoader());
-			Set<Class<? extends TypeParser>> listClass = reflections.getSubTypesOf(TypeParser.class);
+			Set<Class<?>> listClass = reflections.getTypesAnnotatedWith(MakeText.class);
 			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
 			
 			return locateClasses;			

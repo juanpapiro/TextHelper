@@ -50,31 +50,35 @@ public class TextHelperController {
 			
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
 
-			Class<?> clazz = Class.forName(TypeParser.class.getPackageName().concat(".").concat("BigDecimalParser"));
+			Class<?> clazz = Class.forName(RequestSimple.class.getPackageName().concat(".").concat("Request"));
 			Object obj = clazz.getConstructor().newInstance();
 
 			Gson g = new Gson();
 			
-			TextHelperLog.info(g.toJson(obj));
+			TextHelperLog.info("One CLass Locate -> " + g.toJson(obj));
 			
-			TextHelperLog.info("One CLass Locate -> " + clazz.getName());
 
-//			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			TextHelperLog.info(classLoader.getResource(pathResurce).getPath());
+			
 //			InputStream is = classLoader.getResourceAsStream(pathResurce);
 //			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 //			List<String> locateClasses = br.lines().collect(Collectors.toList());
 //			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			
 			Reflections reflections = new Reflections(
-					"br.com.texthelper.parsers",
+					"br.com.texthelper. ",
 					new SubTypesScanner(false),
 					ClasspathHelper.forClassLoader());
 			Set<URL> urls = reflections.getConfiguration().getUrls();
 			Set<Class<?>> listClass = reflections.getSubTypesOf(Object.class);
 			
+			
 			urls.forEach(c -> TextHelperLog.info("class -> " + c.getPath()));
 			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
+
+			File file = new File("/app/target/texthelper-0.0.2-SNAPSHOT.jar!/BOOT-INF/classes!/".concat(".").concat("StringParser"));
+			TextHelperLog.info(file.getPath());
 			
 			return listClass.stream().map(Class::getName).collect(Collectors.toList());			
 		} catch(Exception e) {

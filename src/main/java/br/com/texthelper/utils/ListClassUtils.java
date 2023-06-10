@@ -1,6 +1,7 @@
 package br.com.texthelper.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -53,9 +54,10 @@ public class ListClassUtils {
 	private static List<String> getFilesByResource(String pathResurce) {
 		try {
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
-//			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			ClassLoader classLoader = TypeParser.class.getClassLoader();
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			InputStream is = classLoader.getResourceAsStream(pathResurce);
+			File file = new File(classLoader.getResource(pathResurce).getPath());
+			TextHelperLog.info("File " + file.getPath());
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));

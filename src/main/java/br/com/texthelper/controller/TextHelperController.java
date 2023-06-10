@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +48,6 @@ public class TextHelperController {
 			
 			TextHelperLog.info(System.getProperty("user.dir"));
 			
-//			File file = new File(this.getClass().getResource(System.getProperty("user.dir")).getPath());
-			
-//			TextHelperLog.info("File: " + file);
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
 
 			Class<?> clazz = Class.forName(TypeParser.class.getPackageName().concat(".").concat("BigDecimalParser"));
@@ -69,13 +67,16 @@ public class TextHelperController {
 //			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			
 			Reflections reflections = new Reflections(
-					"br.com.texthelper",
+					"br.com.texthelper.parsers",
 					new SubTypesScanner(false),
 					ClasspathHelper.forClassLoader());
-			Set<Class<?>> listClass = reflections.getTypesAnnotatedWith(MakeText.class);
+			Set<URL> urls = reflections.getConfiguration().getUrls();
+			Set<Class<?>> listClass = reflections.getSubTypesOf(Object.class);
+			
+			urls.forEach(c -> TextHelperLog.info("class -> " + c.getPath()));
 			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
 			
-			return locateClasses;			
+			return listClass.stream().map(Class::getName).collect(Collectors.toList());			
 		} catch(Exception e) {
 			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);
 			return new ArrayList<>();

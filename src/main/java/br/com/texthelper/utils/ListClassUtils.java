@@ -61,11 +61,16 @@ public class ListClassUtils {
 
 			Class<?> clazz = Class.forName(TypeParser.class.getPackageName().concat(".").concat("BigDecimalParser"));
 			TextHelperLog.info("One CLass Locate -> " + clazz.getName());
-			
+
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+			File[] files = new File(classLoader.getResource(pathResurce).getPath()).listFiles();
+			for(int i=0; i < files.length; i++) {
+				TextHelperLog.info("File " + files[i].getPath());				
+			}
+			
+			
 			InputStream is = classLoader.getResourceAsStream(pathResurce);
-			File file = new File(classLoader.getResource(pathResurce).getPath());
-			TextHelperLog.info("File " + file.getPath());
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));

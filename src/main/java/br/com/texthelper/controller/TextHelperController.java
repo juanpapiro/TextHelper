@@ -65,6 +65,7 @@ public class TextHelperController {
 			InputStream is = classLoader.getResourceAsStream(pathResurce.concat("/"));
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
+			TextHelperLog.info(String.format("Size: %d", locateClasses.size()));
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			
 			Reflections reflections = new Reflections(

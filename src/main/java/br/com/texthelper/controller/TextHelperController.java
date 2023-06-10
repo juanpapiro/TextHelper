@@ -44,7 +44,7 @@ public class TextHelperController {
 	
 	@GetMapping("listclass")
 	public List<String> listClass() {
-		String pathResurce = TypeParser.class.getPackageName().replaceAll("[.]","/");
+		String pathResurce = TypeParser.class.getPackageName().replaceAll("[.]","\\\\");
 		try {
 			
 			TextHelperLog.info(System.getProperty("user.dir"));
@@ -60,9 +60,9 @@ public class TextHelperController {
 			
 
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			TextHelperLog.info(classLoader.getResource(pathResurce.concat("/")).getPath());
+			TextHelperLog.info(classLoader.getResource(pathResurce).getPath());
 			
-			InputStream is = classLoader.getResourceAsStream(pathResurce.concat("/"));
+			InputStream is = classLoader.getResourceAsStream(pathResurce);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			TextHelperLog.info(String.format("Size: %d", locateClasses.size()));

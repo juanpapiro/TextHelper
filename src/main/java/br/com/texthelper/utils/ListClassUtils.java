@@ -9,9 +9,13 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.el.util.ReflectionUtil;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
 
 import br.com.texthelper.parsers.TypeParser;
 
@@ -63,17 +67,15 @@ public class ListClassUtils {
 			TextHelperLog.info("One CLass Locate -> " + clazz.getName());
 
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-			File[] files = new File(classLoader.getResource(pathResurce).getPath()).listFiles();
-			for(int i=0; i < files.length; i++) {
-				TextHelperLog.info("File " + files[i].getPath());				
-			}
-			
-			
 			InputStream is = classLoader.getResourceAsStream(pathResurce);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
+			
+			Reflections reflections = new Reflections(pathResurce.replaceAll("/", "."),ClasspathHelper.forClassLoader());
+			Set<Class<?>> listClass = reflections.getSubTypesOf(Object.class);
+			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
+			
 			return locateClasses;			
 		} catch(Exception e) {
 			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);

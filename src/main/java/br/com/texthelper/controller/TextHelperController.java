@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletContext;
+
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +40,9 @@ public class TextHelperController {
 	
 	@GetMapping("/listclass")
 	public Object find() {
-		try {
+		try {	
 			String pathResurce = TypeParser.class.getPackageName();
-			TextHelperLog.info(System.getProperty("version"));
+			TextHelperLog.info(System.getProperty("parent"));
 			TextHelperLog.info(System.getProperty("artifactId"));
 			TextHelperLog.info(System.getProperty("user.dir"));
 			List<String> classes = ListClassUtils.getClasseNamesInPackage("texthelper-0.0.2.jar", pathResurce);

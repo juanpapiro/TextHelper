@@ -41,16 +41,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<classesDirectory>
-						src/main/java
-					</classesDirectory>
-					<archive>
-						<manifest>
-							<mainClass>br.com.texthelper.App</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

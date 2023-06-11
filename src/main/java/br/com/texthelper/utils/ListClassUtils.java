@@ -99,22 +99,21 @@ public class ListClassUtils {
 	
 	
 	public static List<String> getClasseNamesInPackage(String jarName, String packageName) {
-		boolean getJar = true;
 		ArrayList<String> arrayList = new ArrayList<>();
-		packageName = packageName.replaceAll("\\.", "/");
-		if(getJar)
-			TextHelperLog.info("Jar " + jarName + " for " + packageName);
-//		try(JarInputStream jarFile = new JarInputStream(new FileInputStream(TypeParser.class.getResource("/"+jarName).getPath()))) {
-		try(JarInputStream jarFile = new JarInputStream(new FileInputStream(System.getProperty("user.dir")+"/target/"+jarName))) {
+		packageName = packageName.replaceAll("[.]", "/");
+		String pathJar = System.getProperty("user.dir")+"/target/"+jarName;
+		TextHelperLog.info(String.format("Jar name: %s - Package: %s - Path jar: %s", jarName, packageName, pathJar));
+		try(JarInputStream jarFile = new JarInputStream(new FileInputStream(pathJar))) {
 			JarEntry jarEntry;
-			while (true) {
+			while(true) {
 				jarEntry = jarFile.getNextJarEntry();
 				if (jarEntry == null) {
 					break;
 				}
 				TextHelperLog.info(jarEntry.getName());
-				if ((jarEntry.getName().startsWith("BOOT-INF/classes/"+packageName)) && (jarEntry.getName().endsWith(".class"))) {
-					arrayList.add(jarEntry.getName().replaceAll("/", "\\."));
+				if ((jarEntry.getName().contains(packageName)) && (jarEntry.getName().endsWith(".class") )) {
+					String[] splitClass = jarEntry.getName().replace(".class", "").split("/");
+					arrayList.add(splitClass[splitClass.length-1]);
 				}
 			}
 		} catch (Exception e) {

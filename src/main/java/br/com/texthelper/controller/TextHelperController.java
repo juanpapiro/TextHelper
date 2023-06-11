@@ -64,14 +64,13 @@ public class TextHelperController {
 					new SubTypesScanner(false),
 					ClasspathHelper.forClassLoader());
 			Set<URL> urls = reflections.getConfiguration().getUrls();
-			Set<Class<?>> listClass = reflections.getSubTypesOf(Object.class);
-			
+			Set<String> classNameType = reflections.getAllTypes();
 			
 			urls.forEach(c -> TextHelperLog.info("class -> " + c.getPath()));
-			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
+			classNameType.forEach(c -> TextHelperLog.info("class -> " + c));
 
 			
-			return listClass.stream().map(Class::getName).collect(Collectors.toList());			
+			return classNameType.stream().collect(Collectors.toList());			
 		} catch(Exception e) {
 			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);
 			return new ArrayList<>();

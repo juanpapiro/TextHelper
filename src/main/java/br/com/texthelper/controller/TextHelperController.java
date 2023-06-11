@@ -3,21 +3,17 @@ package br.com.texthelper.controller;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.texthelper.App;
+import br.com.texthelper.models.Request;
 import br.com.texthelper.models.RequestSimple;
-import br.com.texthelper.parsers.TypeParser;
 import br.com.texthelper.service.ToObject;
 import br.com.texthelper.service.impl.ToObjectImpl;
 import br.com.texthelper.utils.TextHelperLog;
@@ -25,8 +21,7 @@ import br.com.texthelper.utils.TextHelperLog;
 @RestController
 public class TextHelperController {
 
-	@Autowired
-	private ResourceLoader resourceLoader;
+
 	
 	@GetMapping("/parse")
 	public Object parse(@RequestParam String text) {
@@ -41,7 +36,7 @@ public class TextHelperController {
 	@GetMapping("/listclass")
 	public Object find() {
 		try {
-			String pathResurce = App.class.getPackageName().replaceAll("[.]", "/");
+			String pathResurce = Request.class.getPackageName().replaceAll("[.]", "/");
 			TextHelperLog.info("Iniciando listagem de classes: " + App.class.getPackageName());
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			InputStream is = classLoader.getResourceAsStream(pathResurce);

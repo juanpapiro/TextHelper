@@ -1,5 +1,6 @@
 package br.com.texthelper.models;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -7,7 +8,11 @@ import com.google.gson.Gson;
 
 import br.com.texthelper.annotations.MakeText;
 
-public class Request {
+public class Request implements Serializable {
+	
+
+	private static final long serialVersionUID = -167601329034184302L;
+	
 	
 	@MakeText(length = 20, order = 3, align = "R", trelling = "0", 
 			  decimalPrecision = 2, decimalMovePoint = 2)

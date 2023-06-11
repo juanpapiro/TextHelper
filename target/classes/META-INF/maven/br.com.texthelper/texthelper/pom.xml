@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>br.com.texthelper</groupId>
   <artifactId>texthelper</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <name>texthelper</name>
   <description>Conversor de mensagens posicionais para objetos e objetos para mensagens posicionais</description>
   

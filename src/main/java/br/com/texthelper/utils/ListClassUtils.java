@@ -1,12 +1,17 @@
 package br.com.texthelper.utils;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 import java.util.stream.Collectors;
+
+import br.com.texthelper.parsers.TypeParser;
 
 public class ListClassUtils {
 	
@@ -89,6 +94,33 @@ public class ListClassUtils {
 		} catch(Exception e) {
 			return null;
 		}
+	}
+	
+	
+	
+	public static List<String> getClasseNamesInPackage(String jarName, String packageName) {
+		boolean getJar = true;
+		ArrayList<String> arrayList = new ArrayList<>();
+		packageName = packageName.replaceAll("\\.", "/");
+		if(getJar)
+			TextHelperLog.info("Jar " + jarName + " for " + packageName);
+//		try(JarInputStream jarFile = new JarInputStream(new FileInputStream(TypeParser.class.getResource("/"+jarName).getPath()))) {
+		try(JarInputStream jarFile = new JarInputStream(new FileInputStream(System.getProperty("user.dir")+"/target/"+jarName))) {
+			JarEntry jarEntry;
+			while (true) {
+				jarEntry = jarFile.getNextJarEntry();
+				if (jarEntry == null) {
+					break;
+				}
+				TextHelperLog.info(jarEntry.getName());
+				if ((jarEntry.getName().startsWith("BOOT-INF/classes/"+packageName)) && (jarEntry.getName().endsWith(".class"))) {
+					arrayList.add(jarEntry.getName().replaceAll("/", "\\."));
+				}
+			}
+		} catch (Exception e) {
+			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);
+		}
+		return arrayList;
 	}
 	
 

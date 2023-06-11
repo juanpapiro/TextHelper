@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.texthelper.App;
 import br.com.texthelper.models.Request;
 import br.com.texthelper.models.RequestSimple;
+import br.com.texthelper.parsers.TypeParser;
 import br.com.texthelper.service.ToObject;
 import br.com.texthelper.service.impl.ToObjectImpl;
+import br.com.texthelper.utils.ListClassUtils;
 import br.com.texthelper.utils.TextHelperLog;
 
 @RestController
@@ -36,14 +38,14 @@ public class TextHelperController {
 	@GetMapping("/listclass")
 	public Object find() {
 		try {
-			String pathResurce = Request.class.getPackageName().replaceAll("[.]", "/");
-			TextHelperLog.info("Iniciando listagem de classes: " + App.class.getPackageName());
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			InputStream is = classLoader.getResourceAsStream(pathResurce);
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			List<String> locateClasses = br.lines().collect(Collectors.toList());
-			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
-			return locateClasses;			
+			String pathResurce = TypeParser.class.getPackageName();
+			TextHelperLog.info(System.getProperty("version"));
+			TextHelperLog.info(System.getProperty("artifactId"));
+			TextHelperLog.info(System.getProperty("user.dir"));
+			TypeParser.class.getResource("/texthelper-0.0.2.jar").getPath();
+			List<String> classes = ListClassUtils.getClasseNamesInPackage("texthelper-0.0.2.jar", pathResurce);
+			classes.forEach(TextHelperLog::info);
+			return classes;			
 		} catch(Exception e) {
 			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);
 			return new ArrayList<>();

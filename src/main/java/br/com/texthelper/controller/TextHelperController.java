@@ -42,7 +42,6 @@ public class TextHelperController {
 			TextHelperLog.info(System.getProperty("version"));
 			TextHelperLog.info(System.getProperty("artifactId"));
 			TextHelperLog.info(System.getProperty("user.dir"));
-			TypeParser.class.getResource("/texthelper-0.0.2.jar").getPath();
 			List<String> classes = ListClassUtils.getClasseNamesInPackage("texthelper-0.0.2.jar", pathResurce);
 			classes.forEach(TextHelperLog::info);
 			return classes;			

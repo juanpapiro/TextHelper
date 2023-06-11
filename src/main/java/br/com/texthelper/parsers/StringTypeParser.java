@@ -4,7 +4,7 @@ import java.beans.PropertyDescriptor;
 
 import br.com.texthelper.annotations.MakeText;
 
-public class StringParser implements TypeParser {
+public class StringTypeParser implements TypeParser {
 
 
 	@Override

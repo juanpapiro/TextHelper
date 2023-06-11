@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import br.com.texthelper.annotations.MakeText;
 import br.com.texthelper.utils.TextHelperUtils;
 
-public class LocalDateTimeParser implements TypeParser {
+public class LocalDateTimeTypeParser implements TypeParser {
 
 	@Override
 	public Object parse(String text, MakeText makeText, PropertyDescriptor descriptor) {

@@ -15,7 +15,6 @@ import br.com.texthelper.utils.TextHelperUtils;
 public class ToTextImpl implements ToText {
 
 	private static final String LEFT = "L";
-	private static final String IDENTIFY = "Parser";
 
 	@Override
 	public String toText(Object obj) {
@@ -29,7 +28,7 @@ public class ToTextImpl implements ToText {
 			MakeText makeText = field.getAnnotation(MakeText.class);
 			try {
 				PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), obj.getClass());
-				TypeParser parser = (TypeParser) ListClassUtils.find(propertyDescriptor.getPropertyType(), packageName, IDENTIFY);
+				TypeParser parser = (TypeParser) ListClassUtils.find(propertyDescriptor.getPropertyType(), packageName, TypeParser.class.getSimpleName());
 				Method getter = propertyDescriptor.getReadMethod();
 				Object objValue = getter.invoke(obj);
 				builder.append(formatString(objValue, makeText, parser));

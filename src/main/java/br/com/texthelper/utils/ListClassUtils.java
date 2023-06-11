@@ -16,9 +16,12 @@ public class ListClassUtils {
 	
 	public static Object find(Class<?> type, String path, String identify) {
 		try {
-			String typeName = type.getSimpleName().concat(identify);
-			typeName = typeName.substring(0, 1).toUpperCase().concat(typeName.substring(1, typeName.length()));
-			return Class.forName(path + "." + typeName).getDeclaredConstructor().newInstance();	
+			StringBuilder sb = new StringBuilder(path);
+			sb.append(".");
+			sb.append(type.getSimpleName().substring(0, 1).toUpperCase());
+			sb.append(type.getSimpleName().substring(1, type.getSimpleName().length()));
+			sb.append(identify);
+			return Class.forName(sb.toString()).getDeclaredConstructor().newInstance();	
 		} catch (Exception e) {
 			TextHelperLog.error("Falha ao listar classes de um pacote.", e);
 			return null;

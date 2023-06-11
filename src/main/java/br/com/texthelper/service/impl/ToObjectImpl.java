@@ -14,9 +14,7 @@ import br.com.texthelper.utils.TextHelperUtils;
 
 
 public class ToObjectImpl implements ToObject {
-	
-	private static final String IDENTIFY = "Parser";
-	
+		
 	@Override
 	public Object toObject(String message, Object obj) {		
 		StringBuilder builder = new StringBuilder(message);			
@@ -28,7 +26,7 @@ public class ToObjectImpl implements ToObject {
 			try {
 				PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), obj.getClass());
 				Method setter = propertyDescriptor.getWriteMethod();
-				TypeParser parser = (TypeParser) ListClassUtils.find(propertyDescriptor.getPropertyType(), packageName, IDENTIFY);
+				TypeParser parser = (TypeParser) ListClassUtils.find(propertyDescriptor.getPropertyType(), packageName, TypeParser.class.getSimpleName());
 				Object objValue = parser.parse(builder.substring(0, makeText.length()), makeText, propertyDescriptor);
 				setter.invoke(obj, objValue);
 				builder.delete(0, makeText.length());

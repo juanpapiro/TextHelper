@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 import br.com.texthelper.annotations.MakeText;
 
-public class BigDecimalParser implements TypeParser {
+public class BigDecimalTypeParser implements TypeParser {
 
 	@Override
 	public Object parse(String text, MakeText makeText, PropertyDescriptor descriptor) {

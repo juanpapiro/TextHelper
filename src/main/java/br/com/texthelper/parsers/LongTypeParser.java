@@ -4,7 +4,7 @@ import java.beans.PropertyDescriptor;
 
 import br.com.texthelper.annotations.MakeText;
 
-public class LongParser implements TypeParser {
+public class LongTypeParser implements TypeParser {
 
 	@Override
 	public Object parse(String text, MakeText makeText, PropertyDescriptor descriptor) {

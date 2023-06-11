@@ -1,25 +1,14 @@
 package br.com.texthelper.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.gson.Gson;
 
 import br.com.texthelper.annotations.MakeText;
 import br.com.texthelper.models.RequestSimple;
@@ -49,28 +38,16 @@ public class TextHelperController {
 			
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
 
+			Reflections reflections = new Reflections("br.com.texthelper");
+			
+			Set<Class<? extends TypeParser>> subTypes = reflections.getSubTypesOf(TypeParser.class);
 
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			TextHelperLog.info(classLoader.getResource(pathResurce).getPath());
+			Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(MakeText.class);
 			
-			InputStream is = classLoader.getResourceAsStream("../../../"+pathResurce);
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			List<String> locateClasses = br.lines().collect(Collectors.toList());
-			TextHelperLog.info(String.format("Size: %d", locateClasses.size()));
-			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
+			TextHelperLog.info(String.format("Lista sybTypes: %d", subTypes.size()));
+			TextHelperLog.info(String.format("Lista annotations: %d", annotated.size()));
 			
-			Reflections reflections = new Reflections(
-					TypeParser.class.getPackageName(),
-//					new SubTypesScanner(false),
-					ClasspathHelper.forClassLoader());
-			Set<URL> urls = reflections.getConfiguration().getUrls();
-			Set<String> classNameType = reflections.getAllTypes();
-			
-			urls.forEach(c -> TextHelperLog.info("class -> " + c.getPath()));
-			classNameType.forEach(c -> TextHelperLog.info("class -> " + c));
-
-			
-			return classNameType.stream().collect(Collectors.toList());			
+			return subTypes.stream().map(Class::getName).collect(Collectors.toList());			
 		} catch(Exception e) {
 			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);
 			return new ArrayList<>();

@@ -15,19 +15,21 @@ import br.com.texthelper.utils.TextHelperUtils;
 public class ToTextImpl implements ToText {
 
 	private static final String LEFT = "L";
+	private static final String IDENTIFY = "Parser";
 
 	@Override
 	public String toText(Object obj) {
 		
 		StringBuilder builder = new StringBuilder("");
 		List<Field> fields = TextHelperUtils.builderOrderFields(obj);
-		List<Object> parsers = ListClassUtils.innerPackageWithType(TypeParser.class.getPackageName(), TypeParser.class);
+		String packageName = TypeParser.class.getPackage().getName();
+//		List<Object> parsers = ListClassUtils.innerPackageWithType(TypeParser.class.getPackageName(), TypeParser.class);
 				
 		fields.forEach(field -> {
 			MakeText makeText = field.getAnnotation(MakeText.class);
 			try {
 				PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), obj.getClass());
-				TypeParser parser = TypeParser.find(parsers, propertyDescriptor.getPropertyType());
+				TypeParser parser = (TypeParser) ListClassUtils.find(propertyDescriptor.getPropertyType(), packageName, IDENTIFY);
 				Method getter = propertyDescriptor.getReadMethod();
 				Object objValue = getter.invoke(obj);
 				builder.append(formatString(objValue, makeText, parser));
@@ -55,5 +57,6 @@ public class ToTextImpl implements ToText {
 			return sb.insert(0, makeText.trelling().repeat(lengthTrelling)).toString();
 		}
 	}
+	
 
 }

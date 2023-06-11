@@ -1,29 +1,28 @@
 package br.com.texthelper.utils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.apache.el.util.ReflectionUtil;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-
-import br.com.texthelper.annotations.MakeText;
-import br.com.texthelper.parsers.TypeParser;
 
 public class ListClassUtils {
 	
 	private ListClassUtils() {
 		throw new IllegalStateException("Utility class");
+	}
+	
+	public static Object find(Class<?> type, String path, String identify) {
+		try {
+			String typeName = type.getSimpleName().concat(identify);
+			typeName = typeName.substring(0, 1).toUpperCase().concat(typeName.substring(1, typeName.length()));
+			return Class.forName(path + "." + typeName).getDeclaredConstructor().newInstance();	
+		} catch (Exception e) {
+			TextHelperLog.error("Falha ao listar classes de um pacote.", e);
+			return null;
+		}
 	}
 	
 	/**
@@ -63,23 +62,11 @@ public class ListClassUtils {
 	private static List<String> getFilesByResource(String pathResurce) {
 		try {
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
-
-			Class<?> clazz = Class.forName(TypeParser.class.getPackageName().concat(".").concat("BigDecimalParser"));
-			TextHelperLog.info("One CLass Locate -> " + clazz.getName());
-
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			InputStream is = classLoader.getResourceAsStream(pathResurce);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
-			
-			Reflections reflections = new Reflections(
-					"br.com.texthelper",
-					new SubTypesScanner(false),
-					ClasspathHelper.forClassLoader());
-			Set<Class<?>> listClass = reflections.getTypesAnnotatedWith(MakeText.class);
-			listClass.forEach(c -> TextHelperLog.info("class -> " + c.getName()));
-			
 			return locateClasses;			
 		} catch(Exception e) {
 			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);

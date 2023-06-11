@@ -44,20 +44,11 @@ public class TextHelperController {
 	
 	@GetMapping("listclass")
 	public List<String> listClass() {
-		String pathResurce = TypeParser.class.getPackageName().replaceAll("[.]","\\\\");
+		String pathResurce = TypeParser.class.getPackageName().replaceAll("[.]","/");
 		try {
-			
-			TextHelperLog.info(System.getProperty("user.dir"));
 			
 			TextHelperLog.info("Iniciando listagem de classes: " + pathResurce);
 
-			Class<?> clazz = Class.forName(RequestSimple.class.getPackageName().concat(".").concat("Request"));
-			Object obj = clazz.getConstructor().newInstance();
-
-			Gson g = new Gson();
-			
-			TextHelperLog.info("One CLass Locate -> " + g.toJson(obj));
-			
 
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			TextHelperLog.info(classLoader.getResource(pathResurce).getPath());
@@ -69,7 +60,7 @@ public class TextHelperController {
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			
 			Reflections reflections = new Reflections(
-					"br.com.texthelper. ",
+					"br.com.texthelper.parsers",
 					new SubTypesScanner(false),
 					ClasspathHelper.forClassLoader());
 			Set<URL> urls = reflections.getConfiguration().getUrls();

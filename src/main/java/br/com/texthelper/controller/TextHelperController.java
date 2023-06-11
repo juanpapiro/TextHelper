@@ -59,10 +59,7 @@ public class TextHelperController {
 			TextHelperLog.info(String.format("Size: %d", locateClasses.size()));
 			locateClasses.forEach(locateClass -> TextHelperLog.info("Classe localizada: " + locateClass));
 			
-			Reflections reflections = new Reflections(
-					"br.com.texthelper.parsers",
-					new SubTypesScanner(false),
-					ClasspathHelper.forClassLoader());
+			Reflections reflections = new Reflections("br.com.texthelper.parsers");
 			Set<URL> urls = reflections.getConfiguration().getUrls();
 			Set<String> classNameType = reflections.getAllTypes();
 			

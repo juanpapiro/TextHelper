@@ -43,7 +43,7 @@ public class TextHelperController {
 		try {
 			String pathResurce = App.class.getPackageName().replaceAll("[.]", "/");
 			TextHelperLog.info("Iniciando listagem de classes: " + App.class.getPackageName());
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			ClassLoader classLoader = App.class.getClassLoader();
 			InputStream is = classLoader.getSystemResourceAsStream(pathResurce);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());

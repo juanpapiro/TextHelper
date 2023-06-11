@@ -11,9 +11,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.stream.Collectors;
 
-import br.com.texthelper.parsers.TypeParser;
-
 public class ListClassUtils {
+	
+	private static final String JAR_NAME = "texthelper-0.0.2.jar";
 	
 	private ListClassUtils() {
 		throw new IllegalStateException("Utility class");
@@ -96,13 +96,37 @@ public class ListClassUtils {
 		}
 	}
 	
+
+	
+	/**
+	 * Obtem lista de classes Object de um pacote filtradas por um tipo
+	 * Ideal para obter classes com extends ou implements
+	 */
+	public static List<Object> findClassByPackageFilterType(String path, Class<?> type) {
+		List<Class<?>> classes = findClassByPackage(path);
+		return classes.stream().map(clazz -> extractInstance(clazz, type))
+			.filter(Objects::nonNull).collect(Collectors.toList());
+	}
 	
 	
-	public static List<String> getClasseNamesInPackage(String jarName, String packageName) {
-		ArrayList<String> arrayList = new ArrayList<>();
+	public static List<Class<?>> findClassByPackage(String packageName) {
+		List<String> classLocateNames = getClasseNamesInPackage(packageName);
+		List<Class<?>> classLocateLoad = new ArrayList<>();
+		classLocateNames.forEach(classLocate -> {
+			Class<?> classLoad = extractClass(packageName, classLocate);
+			if(classLoad != null) {
+				classLocateLoad.add(classLoad);
+			}
+		});
+		return classLocateLoad;
+	}
+	
+	
+	public static List<String> getClasseNamesInPackage(String packageName) {
+		ArrayList<String> classLocateNames = new ArrayList<>();
 		packageName = packageName.replaceAll("[.]", "/");
-		String pathJar = System.getProperty("user.dir")+"/target/"+jarName;
-		TextHelperLog.info(String.format("Jar name: %s - Package: %s - Path jar: %s", jarName, packageName, pathJar));
+		String pathJar = System.getProperty("user.dir")+"/target/"+JAR_NAME;
+		TextHelperLog.info(String.format("Jar name: %s - Package: %s - Path jar: %s", JAR_NAME, packageName, pathJar));
 		try(JarInputStream jarFile = new JarInputStream(new FileInputStream(pathJar))) {
 			JarEntry jarEntry;
 			while(true) {
@@ -113,13 +137,23 @@ public class ListClassUtils {
 				TextHelperLog.info(jarEntry.getName());
 				if ((jarEntry.getName().contains(packageName)) && (jarEntry.getName().endsWith(".class") )) {
 					String[] splitClass = jarEntry.getName().replace(".class", "").split("/");
-					arrayList.add(splitClass[splitClass.length-1]);
+					classLocateNames.add(splitClass[splitClass.length-1]);
 				}
 			}
 		} catch (Exception e) {
-			TextHelperLog.error("Falha ao ler stream de bytes de resource.", e);
+			TextHelperLog.error("Falha ao ler jar.", e);
 		}
-		return arrayList;
+		classLocateNames.forEach(classLocate -> String.format("Classe localizada: %s", classLocateNames));
+		return classLocateNames;
+	}
+	
+	private static Class<?> extractClass(String packageName, String className) {
+		try {
+			return Class.forName(packageName + "." + className);
+		} catch(Exception e) {
+			TextHelperLog.error("Falha ao obter classe com Calss.forName().", e);
+			return null;
+		}
 	}
 	
 

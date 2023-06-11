@@ -1,21 +1,12 @@
 package br.com.texthelper.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.servlet.ServletContext;
-
-import org.apache.logging.log4j.util.PropertiesUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.texthelper.App;
-import br.com.texthelper.models.Request;
 import br.com.texthelper.models.RequestSimple;
 import br.com.texthelper.parsers.TypeParser;
 import br.com.texthelper.service.ToObject;
@@ -45,7 +36,7 @@ public class TextHelperController {
 			TextHelperLog.info(System.getProperty("parent"));
 			TextHelperLog.info(System.getProperty("artifactId"));
 			TextHelperLog.info(System.getProperty("user.dir"));
-			List<String> classes = ListClassUtils.getClasseNamesInPackage("texthelper-0.0.2.jar", pathResurce);
+			List<String> classes = ListClassUtils.getClasseNamesInPackage(pathResurce);
 			classes.forEach(TextHelperLog::info);
 			return classes;			
 		} catch(Exception e) {

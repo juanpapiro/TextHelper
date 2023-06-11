@@ -22,13 +22,14 @@ public class ToTextImpl implements ToText {
 		StringBuilder builder = new StringBuilder("");
 		List<Field> fields = TextHelperUtils.builderOrderFields(obj);
 		String packageName = TypeParser.class.getPackage().getName();
-//		List<Object> parsers = ListClassUtils.innerPackageWithType(TypeParser.class.getPackageName(), TypeParser.class);
+		List<Object> parsers = ListClassUtils.findClassByPackageFilterType(packageName, TypeParser.class);
 				
 		fields.forEach(field -> {
 			MakeText makeText = field.getAnnotation(MakeText.class);
 			try {
 				PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), obj.getClass());
-				TypeParser parser = (TypeParser) ListClassUtils.find(propertyDescriptor.getPropertyType(), packageName, TypeParser.class.getSimpleName());
+//				TypeParser parser = (TypeParser) ListClassUtils.find(propertyDescriptor.getPropertyType(), packageName, TypeParser.class.getSimpleName());
+				TypeParser parser = TypeParser.find(parsers, propertyDescriptor.getPropertyType());
 				Method getter = propertyDescriptor.getReadMethod();
 				Object objValue = getter.invoke(obj);
 				builder.append(formatString(objValue, makeText, parser));

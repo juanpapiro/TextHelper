@@ -53,7 +53,7 @@ public class TextHelperController {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			TextHelperLog.info(classLoader.getResource(pathResurce).getPath());
 			
-			InputStream is = classLoader.getResourceAsStream(pathResurce);
+			InputStream is = classLoader.getResourceAsStream("../../../"+pathResurce);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			List<String> locateClasses = br.lines().collect(Collectors.toList());
 			TextHelperLog.info(String.format("Size: %d", locateClasses.size()));

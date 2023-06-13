@@ -4,9 +4,12 @@ import java.beans.PropertyDescriptor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.stereotype.Component;
+
 import br.com.texthelper.annotations.MakeText;
 import br.com.texthelper.utils.TextHelperUtils;
 
+@Component
 public class LocalDateTimeTypeParser implements TypeParser {
 
 	@Override

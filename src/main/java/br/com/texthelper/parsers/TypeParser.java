@@ -54,13 +54,14 @@ public interface TypeParser {
 	
 	
 	
-	public static TypeParser find(List<Object> parsers, Class<?> type) {
-		return (TypeParser) parsers.stream()
-				.filter(parserClass -> ((TypeParser) parserClass).checkType(type))
+	public static TypeParser find(List<TypeParser> parsers, Class<?> type) {
+		return parsers.stream()
+				.filter(parserClass -> parserClass.checkType(type))
 				.findFirst()
 				.orElseThrow(() -> new RuntimeException(
 						String.format("Tipo %s sem classe de conversão.",
 								type.getName())));
 	}
+	
 
 }

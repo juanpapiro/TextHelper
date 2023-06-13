@@ -3,8 +3,11 @@ package br.com.texthelper.parsers;
 import java.beans.PropertyDescriptor;
 import java.math.BigDecimal;
 
+import org.springframework.stereotype.Component;
+
 import br.com.texthelper.annotations.MakeText;
 
+@Component
 public class FloatTypeParser implements TypeParser {
 
 	@Override

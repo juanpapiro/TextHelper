@@ -2,8 +2,11 @@ package br.com.texthelper.parsers;
 
 import java.beans.PropertyDescriptor;
 
+import org.springframework.stereotype.Component;
+
 import br.com.texthelper.annotations.MakeText;
 
+@Component
 public class IntegerTypeParser implements TypeParser {
 
 	@Override
